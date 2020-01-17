@@ -1,4 +1,4 @@
-CREATE DATABASE IF NOT EXISTS `test_api` 
+CREATE DATABASE IF NOT EXISTS `test_api`;
 USE `test_api`;
 
 CREATE TABLE IF NOT EXISTS `issue` (
