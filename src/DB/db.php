@@ -24,12 +24,10 @@ class db {
     }
 
      /**
-        * Конструктор класса db
+        * Метод для возвращения всей таблицы issue
         * 
-        * Шлюз для работы с таблицей issue
-        *
-        * @param PDO $db Линк к db
-        * @return void  
+        *    
+        * @return array  
      */
     public function findAll()
     {
@@ -48,7 +46,14 @@ class db {
             exit($e->getMessage());
         }
     }
-
+        /**
+        * Метод для возвращения строки таблицы issue
+        * 
+        * Возвращает конкретную строку по признаку id
+        * 
+        * @param int $id id записи в таблице   
+        * @return array  
+        */
     public function find($id)
     {
         $statement = "
@@ -68,7 +73,14 @@ class db {
             exit($e->getMessage());
         }    
     }
-
+        /**
+        * Метод для добавления заиси в таблицу issue
+        * 
+        * Добавляет новую запись в таблицу issue
+        * 
+        * @param array $input Ассоциативный массив  
+        * @return int  
+        */
     public function insert(Array $input)
     {
         $statement = "
@@ -92,7 +104,14 @@ class db {
             exit($e->getMessage());
         }    
     }
-
+         /**
+        * Метод для обновления заиси в таблице issue
+        * 
+        * Обновляет запись в таблице issue по признаку id, обновляются только поля user и date_update
+        * 
+        * @param array $input Ассоциативный массив  
+        * @return int  
+        */
     public function update($id, Array $input)
     {
         $statement = "
@@ -115,7 +134,14 @@ class db {
             exit($e->getMessage());
         }    
     }
-
+      /**
+        * Метод для удаления заиси из таблицы issue
+        * 
+        * Удаляет запись из таблицы issue по признаку id
+        * 
+        * @param array $input Ассоциативный массив  
+        * @return int  
+        */
     public function delete($id)
     {
         $statement = "

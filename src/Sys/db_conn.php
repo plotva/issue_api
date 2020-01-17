@@ -2,7 +2,12 @@
 namespace Src\Sys;
 
 class db_conn {
-
+/**
+* Class db_conn
+* 
+* Класс для создания PDO подключения к БД mysql
+* 
+*/
     private $dbConnection = null;
 
     public function __construct()

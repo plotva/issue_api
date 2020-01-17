@@ -4,12 +4,29 @@ namespace Src\Ctrl;
 use Src\DB\db;
 
 class IssueCtrl {
-
+/**
+* Class IssueCtrl
+* 
+* Контроллер для работы со шлюзом таблицы issue
+* 
+* @var obj $link Ликнк к БД
+* @var string $requestMethod Тип полученного HTTP запроса
+* @var int $issueid id записи в таблице issue
+* @var obj $db оъект класса db
+*/
     private $link;
     private $requestMethod;
 
     private $issueid;
     private $db;
+
+    /**
+        * Конструктор класса IssueCtrl
+        * 
+        * Приявязка переменных к объекту класса 
+        *
+        * @return void  
+     */
 
     public function __construct($link, $requestMethod,$issueid)
     {
@@ -18,6 +35,13 @@ class IssueCtrl {
         $this->issueid = $issueid;
         $this->db = new db($link);
     }
+
+    /**
+        * Метод для работы с http запросами
+        * 
+        *    
+        * @return string Возвращает json строку с результатом запроса  
+     */
 
     public function processRequest()
     {
@@ -48,6 +72,12 @@ class IssueCtrl {
         }
     }
 
+     /**
+        * Метод обработчик для типа запроса GET
+        * 
+        *    
+        * @return array 
+     */
     private function getAllIssue()
     {
         $result = $this->db->findAll();
@@ -56,6 +86,12 @@ class IssueCtrl {
         return $response;
     }
 
+        /**
+        * Метод обработчик для типа запроса GET
+        * 
+        * @param int $id id записи в таблице issue 
+        * @return array 
+        */ 
     private function getIssue($id)
     {
         $result = $this->db->find($id);
@@ -67,20 +103,34 @@ class IssueCtrl {
         return $response;
     }
 
+        /**
+        * Метод обработчик для типа запроса POST
+        * 
+        * @var string  $date_create  Текущая дата
+        * @var array  $input Данные из http запроса
+        * @return array 
+        */ 
     private function createIssueFromRequest()
-    {   $date_create=date("Y-m-d H:i:s");
+    {   $date_=date("Y-m-d H:i:s");
         $input = (array) json_decode (file_get_contents('php://input'), TRUE);
-         $input['date_create']=$date_create;
-         $input['date_update']=$date_create;
+         $input['date_create']=$date_;
+         $input['date_update']=$date_;
         
         if (! $this->validateinsertIssue($input)) {
-            return $this->unprocessableEntityResponse($input);
+            return $this->unprocessableResponse($input);
         }
         $this->db->insert($input);
         $response['status_code_header'] = 'HTTP/1.1 201 Created';
         $response['body'] = null;
         return $response;
     }
+
+       /**
+        * Метод обработчик для типа запроса PUT
+        * 
+        * @var array  $input Данные из http запроса
+        * @return array 
+        */
 
     private function updateIssueFromRequest($id)
     {     
@@ -91,14 +141,19 @@ class IssueCtrl {
         $input = (array) json_decode(file_get_contents('php://input'),TRUE);
         $input['date_update']=date("Y-m-d H:i:s");
         if (! $this->validateupdateIssue($input)) {
-            return $this->unprocessableEntityResponse($input);
+            return $this->unprocessableResponse($input);
         }
         $this->db->update($id, $input);
         $response['status_code_header'] = 'HTTP/1.1 200 OK';
         $response['body'] = null;
         return $response;
     }
-
+        /**
+        * Метод обработчик для типа запроса DELETE
+        * 
+        * @param int $id id записи в таблице issue
+        * @return int 
+        */
     private function deleteIssue($id)
     {
         $result = $this->db->find($id);
@@ -111,6 +166,13 @@ class IssueCtrl {
         return $response;
     }
 
+         /**
+        * Метод валидатор данных
+        * 
+        * @param array $input Массив поступивших данных
+        * @return bool 
+        */
+
     private function validateinsertIssue($input)
     {
         if (! isset($input['name'])) {
@@ -121,7 +183,12 @@ class IssueCtrl {
         }
         return true;
     }
-
+      /**
+        * Метод валидатор данных
+        * 
+        * @param array $input Массив поступивших данных
+        * @return bool 
+        */
         private function validateupdateIssue($input)
     {
         if (! isset($input['user'])) {
@@ -130,7 +197,14 @@ class IssueCtrl {
         return true;
     }
 
-    private function unprocessableEntityResponse($data)
+      /**
+        * Метод для формирования ответа на неверную валидацию  данных
+        * 
+        * @param array $data Массив поступивших данных
+        * @return string 
+        */
+
+    private function unprocessableResponse($data)
     {    
         $response['status_code_header'] = 'HTTP/1.1 422 Unprocessable Entity';
         $response['body'] = json_encode([
@@ -141,6 +215,12 @@ class IssueCtrl {
              return $response;
     }
 
+    /**
+        * Метод для формирования ответа по умолчаению
+        * 
+        * 
+        * @return string 
+        */
     private function notFoundResponse()
     {
         $response['status_code_header'] = 'HTTP/1.1 404 Not Found';
