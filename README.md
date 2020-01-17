@@ -7,5 +7,6 @@ To start:
 2. Install dependencies  
    --  php {path-to-install_dir}/composer install
 3. Create DB, use mysql -u <login> -p < db.sql 
-4. Use php -S localhost:8081 -t public to start simple web server
+4. Setup .env from .env.example
+5. Use php -S localhost:8081 -t public to start simple web server
 
